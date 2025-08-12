@@ -61,25 +61,39 @@ add_action('wp_ajax_nopriv_gfc_place_order', 'gfc_place_order');
 function gfc_place_order()
 {
     try {
-        // sanitize input
+        // Sanitize and collect all relevant billing fields
         $address = array(
-            'first_name' => sanitize_text_field($_POST['billing_full_name'] ?? ''),
-            'email' => sanitize_email($_POST['billing_email'] ?? ''),
-            'phone' => sanitize_text_field($_POST['billing_phone'] ?? ''),
-            'address_1' => sanitize_text_field($_POST['billing_address'] ?? ''),
+            'first_name' => sanitize_text_field($_POST['billing_first_name'] ?? ''),
+            'last_name'  => sanitize_text_field($_POST['billing_last_name'] ?? ''),
+            'email'      => sanitize_email($_POST['billing_email'] ?? ''),
+            'phone'      => sanitize_text_field($_POST['billing_phone'] ?? ''),
+            'country'    => sanitize_text_field($_POST['billing_country'] ?? ''),
+            'city'       => sanitize_text_field($_POST['billing_city'] ?? ''),
+            'address_1'  => sanitize_text_field($_POST['billing_address_1'] ?? ''),
+            'address_2'  => sanitize_text_field($_POST['billing_address_2'] ?? ''),
         );
 
-        // create the order
+        // Create the order
         $order = wc_create_order();
         foreach (WC()->cart->get_cart() as $item) {
             $order->add_product($item['data'], $item['quantity']);
         }
         $order->set_address($address, 'billing');
+        $order->set_address($address, 'shipping');
         $order->set_payment_method('cod');
         $order->calculate_totals();
         $order->update_status('processing');
 
-        // clear the cart
+        // Save additional meta
+        if (!empty($_POST['billing_neighborhood'])) {
+            $order->update_meta_data('_billing_neighborhood', sanitize_text_field($_POST['billing_neighborhood']));
+        }
+        if (!empty($_POST['address_nickname'])) {
+            $order->update_meta_data('_address_nickname', sanitize_text_field($_POST['address_nickname']));
+        }
+        $order->save();
+
+        // Clear the cart
         WC()->cart->empty_cart();
 
         wp_send_json_success(array(
