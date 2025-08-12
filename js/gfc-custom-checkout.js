@@ -13,20 +13,25 @@ jQuery(function($){
   $error.hide();
   $success.hide();
 
-  $form.on('submit', function(e){
-    e.preventDefault();
-    $submit.prop('disabled', true);
-    $error.hide().empty();
-    $success
-      .show()
-      .removeClass('woocommerce-error')
-      .addClass('woocommerce-message')
-      .text('⏳ Processing your order…');
+    $form.on('submit', function(e){
+      e.preventDefault();
+      $submit.prop('disabled', true);
+      $error.hide().empty();
+      $success
+        .show()
+        .removeClass('woocommerce-error')
+        .addClass('woocommerce-message')
+        .text('⏳ Processing your order…');
 
-    $.post(
-      gfc_ajax.url,
-      $form.serialize() + '&action=gfc_place_order',
-      function(json){
+      const payload = new URLSearchParams(new FormData($form[0]));
+      payload.append('action', 'gfc_place_order');
+
+      fetch(gfc_ajax.ajax_url, {
+        method: 'POST',
+        body: payload
+      })
+      .then(res => res.json())
+      .then(function(json){
         $submit.prop('disabled', false);
 
         if ( json.success && json.data.order_number ) {
@@ -40,20 +45,19 @@ jQuery(function($){
             .text('❌ ' + (json.data.message || 'Something went wrong.'));
           $success.hide().empty();
         }
-      },
-      'json'
-    ).fail(function(){
-      $submit.prop('disabled', false);
-      $error
-        .show()
-        .addClass('woocommerce-error')
-        .text('❌ Request failed. Please try again.');
-      $success.hide().empty();
+      })
+      .catch(function(){
+        $submit.prop('disabled', false);
+        $error
+          .show()
+          .addClass('woocommerce-error')
+          .text('❌ Request failed. Please try again.');
+        $success.hide().empty();
+      });
     });
   });
-});
-document.addEventListener('DOMContentLoaded', function () {
-  const addressFields = document.querySelectorAll('input[name="billing_address"], input[name="billing_full_name"], input[name="billing_phone"], input[name="billing_email"]');
+  document.addEventListener('DOMContentLoaded', function () {
+    const addressFields = document.querySelectorAll('input[name="billing_address_1"], input[name="billing_full_name"], input[name="billing_phone"], input[name="billing_email"]');
 
   addressFields.forEach(field => {
     field.addEventListener('blur', () => {
