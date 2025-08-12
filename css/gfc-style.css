@@ -1,0 +1,140 @@
+.gelati-fast-checkout {
+  padding: 1.5em;
+  margin-bottom: 2em;
+}
+
+.gelati-fast-checkout h3 {
+  margin-bottom: 0.5em;
+  font-family: "nexa-regular";
+}
+
+#review-order {
+  padding: 1rem;
+  border: 1px solid #eee;
+}
+
+#review-order h3 {
+  text-align: center;
+  font-weight: bold;
+}
+
+#review-order .product-total {
+  text-align: right;
+}
+
+.order-review {
+  list-style: disc inside;
+  margin-bottom: 1em;
+}
+.order-review .product-price {
+  display: block;
+  float: none;
+  text-align: right;
+  margin-top: 0.5em;
+}
+
+.order-total {
+  border-top: 1px solid #ccc;
+  padding-top: 0.5em;
+  margin-bottom: 1.5em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+strong.product-quantity {
+  color: #e94956;
+  font-family: "nexa-regular";
+}
+
+#gfc-notices .woocommerce-message {
+  color: #155724;
+  background: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 0.75em;
+  margin-top: 1em;
+}
+#gfc-notices .woocommerce-error {
+  color: #721c24;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 0.75em;
+  margin-top: 1em;
+}
+
+/* Progress bar (.before-checkout & .gfc-steps) */
+.before-checkout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5em;
+}
+.before-checkout .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.before-checkout li {
+  list-style: none;
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+  background: #444;
+  color: #fff;
+  margin: 0;
+}
+.before-checkout h4 {
+  margin: 0.5em 0 0;
+  font-weight: normal;
+  color: #666;
+}
+.before-checkout .active h4 {
+  color: #03b695; /* Updated: use only .active for label color */
+}
+.before-checkout p {
+  margin: 0 1em;
+  /* Removed flex property as separators no longer need to stretch */
+  text-align: center;
+  color: #ccc;
+}
+
+.gfc-steps ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 1em 0;
+}
+.gfc-steps li {
+  margin: 0 1em;
+  text-align: center;
+}
+.gfc-steps span {
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  line-height: 2em;
+  border-radius: 50%;
+  background: #444;
+  color: #fff;
+}
+/* Removed .done rules; using only .current for active styling */
+.gfc-steps .current span {
+  background: #03b695; /* Updated: active step highlight */
+  color: #fff; /* Ensure white text */
+}
+
+/* Desktop layout: form and order review side by side */
+@media (min-width: 768px) {
+  .gelati-fast-checkout {
+    display: flex;
+    gap: 2em;
+    align-items: flex-start;
+  }
+  .gelati-fast-checkout form#gelati-fast-checkout-form {
+    flex: 2;
+  }
+  .gelati-fast-checkout #review-order {
+    flex: 1;
+  }
+}
