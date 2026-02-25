@@ -25,6 +25,7 @@ jQuery(function($){
 
       const payload = new URLSearchParams(new FormData($form[0]));
       payload.append('action', 'gfc_place_order');
+      payload.append('security', gfc_ajax.security);
 
       fetch(gfc_ajax.ajax_url, {
         method: 'POST',
@@ -71,6 +72,7 @@ jQuery(function($){
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({
         action: 'gfc_refresh_cart_totals',
+        security: gfc_ajax.security,
       })
     })
     .then(res => res.json())

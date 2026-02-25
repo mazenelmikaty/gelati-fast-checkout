@@ -47,6 +47,7 @@ function gfc_enqueue_assets()
 
         wp_localize_script('gfc-custom-checkout', 'gfc_ajax', [
             'ajax_url' => admin_url('admin-ajax.php'),
+            'security' => wp_create_nonce('gfc_checkout_nonce'),
         ]);
         // ✅ Add WooCommerce built-in scripts that handle dynamic fields
         wp_enqueue_script('wc-checkout');
@@ -60,6 +61,8 @@ add_action('wp_ajax_gfc_place_order', 'gfc_place_order');
 add_action('wp_ajax_nopriv_gfc_place_order', 'gfc_place_order');
 function gfc_place_order()
 {
+    check_ajax_referer('gfc_checkout_nonce', 'security');
+
     try {
         // Sanitize and collect all relevant billing fields
         $address = array(
@@ -109,6 +112,8 @@ add_action('wp_ajax_gfc_refresh_cart_totals', 'gfc_refresh_cart_totals');
 add_action('wp_ajax_nopriv_gfc_refresh_cart_totals', 'gfc_refresh_cart_totals');
 
 function gfc_refresh_cart_totals() {
+  check_ajax_referer('gfc_checkout_nonce', 'security');
+
   WC()->cart->calculate_totals();
 
   $subtotal = wc_price(WC()->cart->get_subtotal());
